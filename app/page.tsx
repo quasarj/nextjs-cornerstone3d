@@ -55,7 +55,7 @@ function App() {
       const viewportInput = {
         viewportId,
         type: Enums.ViewportType.ORTHOGRAPHIC,
-        element: elementRef.current,
+        element: elementRef.current as HTMLDivElement,
         defaultOptions: {
           orientation: Enums.OrientationAxis.SAGITTAL,
         },
