@@ -68,7 +68,7 @@ function App() {
 
       // Define a volume in memory
       const volumeId = "myVolume"
-      const volume = await volumeLoader.createAndCacheEmptyVolume(volumeId, {
+      const volume = await volumeLoader.createAndCacheVolume(volumeId, {
         imageIds,
       })
 

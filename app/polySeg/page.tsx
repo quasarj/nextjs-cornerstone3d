@@ -13,7 +13,6 @@ import {
 import * as cornerstoneTools from "@cornerstonejs/tools"
 
 const {
-  SegmentationDisplayTool,
   ToolGroupManager,
   Enums: csToolsEnums,
   segmentation,
@@ -50,18 +49,12 @@ function ContourSegmentationComponent() {
 
       await initDemo()
 
-      cornerstoneTools.addTool(SegmentationDisplayTool)
       cornerstoneTools.addTool(PlanarFreehandContourSegmentationTool)
 
       const toolGroup1 = ToolGroupManager.createToolGroup(toolGroupId1)
       const toolGroup2 = ToolGroupManager.createToolGroup(toolGroupId2)
 
       toolGroup1.addTool(PlanarFreehandContourSegmentationTool.toolName)
-      toolGroup1.addTool(SegmentationDisplayTool.toolName)
-      toolGroup2.addTool(SegmentationDisplayTool.toolName)
-
-      toolGroup1.setToolEnabled(SegmentationDisplayTool.toolName)
-      toolGroup2.setToolEnabled(SegmentationDisplayTool.toolName)
 
       toolGroup1.setToolActive(PlanarFreehandContourSegmentationTool.toolName, {
         bindings: [
@@ -81,7 +74,7 @@ function ContourSegmentationComponent() {
         wadoRsRoot: "https://d3t6nz73ql33tx.cloudfront.net/dicomweb",
       })
 
-      const volume = await volumeLoader.createAndCacheEmptyVolume(volumeId, {
+      const volume = await volumeLoader.createAndCacheVolume(volumeId, {
         imageIds,
       })
 
