@@ -11,10 +11,9 @@
   "dependencies": {
     "react": "^18",
     "@cornerstonejs/calculate-suv": "1.1.0",
-    "@cornerstonejs/core": "2.0.0-beta.21",
-    "@cornerstonejs/dicom-image-loader": "2.0.0-beta.21",
-    "@cornerstonejs/streaming-image-volume-loader": "2.0.0-beta.21",
-    "@cornerstonejs/tools": "2.0.0-beta.21",
+    "@cornerstonejs/core": "2.0.0-beta.30",
+    "@cornerstonejs/dicom-image-loader": "2.0.0-beta.30",
+    "@cornerstonejs/tools": "2.0.0-beta.30",
     "@icr/polyseg-wasm": "^0.4.0",
     "dcmjs": "0.33.0",
     "dicom-parser": "1.8.21",

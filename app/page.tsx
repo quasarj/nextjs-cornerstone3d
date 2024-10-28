@@ -6,7 +6,10 @@ import {
   Enums,
   type Types,
   volumeLoader,
+  cornerstoneStreamingImageVolumeLoader,
 } from "@cornerstonejs/core"
+
+ volumeLoader.registerUnknownVolumeLoader(cornerstoneStreamingImageVolumeLoader)
 
 function App() {
   const elementRef = useRef<HTMLDivElement>(null)
