@@ -55,6 +55,7 @@ function App() {
 
       // viewport.render()
 
+
       const viewportInput = {
         viewportId,
         type: Enums.ViewportType.ORTHOGRAPHIC,
