@@ -1,6 +1,7 @@
 "use client"
-import { useEffect,  useRef } from "react"
-import { createImageIdsAndCacheMetaData, initDemo } from "../lib"
+
+import { useEffect, useRef } from "react"
+import createImageIdsAndCacheMetaData from "../lib/createImageIdsAndCacheMetaData"
 import {
   RenderingEngine,
   Enums,
@@ -8,8 +9,11 @@ import {
   volumeLoader,
   cornerstoneStreamingImageVolumeLoader,
 } from "@cornerstonejs/core"
+import { init as csRenderInit } from "@cornerstonejs/core"
+import { init as csToolsInit } from "@cornerstonejs/tools"
+import { init as dicomImageLoaderInit } from "@cornerstonejs/dicom-image-loader"
 
- volumeLoader.registerUnknownVolumeLoader(cornerstoneStreamingImageVolumeLoader)
+volumeLoader.registerUnknownVolumeLoader(cornerstoneStreamingImageVolumeLoader)
 
 function App() {
   const elementRef = useRef<HTMLDivElement>(null)
@@ -21,7 +25,10 @@ function App() {
         return
       }
       running.current = true
-      await initDemo()
+
+      await csRenderInit()
+      await csToolsInit()
+      dicomImageLoaderInit({ maxWebWorkers: 1 })
 
       // Get Cornerstone imageIds and fetch metadata into RAM
       const imageIds = await createImageIdsAndCacheMetaData({
@@ -35,31 +42,12 @@ function App() {
       // Instantiate a rendering engine
       const renderingEngineId = "myRenderingEngine"
       const renderingEngine = new RenderingEngine(renderingEngineId)
-      const viewportId = "CT_STACK"
-
-      // const viewportInput = {
-      //   viewportId,
-      //   type: Enums.ViewportType.STACK,
-      //   element: elementRef.current,
-      // }
-
-      // renderingEngine.enableElement(viewportInput)
-
-      // const viewport = renderingEngine.getViewport(
-      //   viewportId
-      // ) as Types.IStackViewport
-
-      // const stack = [imageIds[0]]
-
-      // viewport.setStack(stack)
-
-      // viewport.render()
-
+      const viewportId = "CT"
 
       const viewportInput = {
         viewportId,
         type: Enums.ViewportType.ORTHOGRAPHIC,
-        element: elementRef.current as HTMLDivElement,
+        element: elementRef.current,
         defaultOptions: {
           orientation: Enums.OrientationAxis.SAGITTAL,
         },
@@ -68,19 +56,22 @@ function App() {
       renderingEngine.enableElement(viewportInput)
 
       // Get the stack viewport that was created
-      const viewport = renderingEngine.getViewport(viewportId) as Types.IVolumeViewport
+      const viewport = renderingEngine.getViewport(
+        viewportId
+      ) as Types.IVolumeViewport
 
       // Define a volume in memory
-      const volumeId = "myVolume"
+      const volumeId = "streamingImageVolume"
       const volume = await volumeLoader.createAndCacheVolume(volumeId, {
         imageIds,
       })
 
       // Set the volume to load
+      // @ts-ignore
       volume.load()
 
       // Set the volume on the viewport and it's default properties
-      viewport.setVolumes([{ volumeId}])
+      viewport.setVolumes([{ volumeId }])
 
       // Render the image
       viewport.render()
