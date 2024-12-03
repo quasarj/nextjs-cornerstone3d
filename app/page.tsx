@@ -7,13 +7,11 @@ import {
   Enums,
   type Types,
   volumeLoader,
-  cornerstoneStreamingImageVolumeLoader,
 } from "@cornerstonejs/core"
 import { init as csRenderInit } from "@cornerstonejs/core"
 import { init as csToolsInit } from "@cornerstonejs/tools"
 import { init as dicomImageLoaderInit } from "@cornerstonejs/dicom-image-loader"
 
-volumeLoader.registerUnknownVolumeLoader(cornerstoneStreamingImageVolumeLoader)
 
 function App() {
   const elementRef = useRef<HTMLDivElement>(null)
