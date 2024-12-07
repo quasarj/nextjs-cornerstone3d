@@ -12,6 +12,33 @@ import { init as csRenderInit } from "@cornerstonejs/core"
 import { init as csToolsInit } from "@cornerstonejs/tools"
 import { init as dicomImageLoaderInit } from "@cornerstonejs/dicom-image-loader"
 
+/**
+ * This function just generates a set of imageIds using wadouri that
+ * load a volume from TCIA. The final output looks like:
+ * "wadouri:https://services.cancerimagingarchive.net/nbia-api/services/v1/getSingleImage?SeriesInstanceUID=1.3.6.1.4.1.14519.5.2.1.99.1071.85179820664090866578359430774215&SOPInstanceUID=1.3.6.1.4.1.14519.5.2.1.99.1071.17391246882265552538333790368843"
+ */
+async function genTCIAImageIds() {
+  let base_url = 'https://services.cancerimagingarchive.net/nbia-api/services/v1/getSingleImage?';
+
+  // These can be changed to any public study/series on TCIA
+  let study = '1.3.6.1.4.1.14519.5.2.1.99.1071.28052166218470275068707230421869';
+  let series = '1.3.6.1.4.1.14519.5.2.1.99.1071.85179820664090866578359430774215';
+
+  let results = [];
+
+  let response = await fetch(`https://nbia.cancerimagingarchive.net/studies/${study}/series/${series}`);
+  if (response.ok) {
+    let resjson = await response.json();
+    for (let instance of resjson.studies[0].seriesList[0].instances) {
+      let sop = instance.sopInstanceUid;
+      let url = `wadouri:${base_url}SeriesInstanceUID=${series}&SOPInstanceUID=${sop}`;
+      results.push(url);
+    }
+  }
+
+  return results;
+}
+
 
 function App() {
   const elementRef = useRef<HTMLDivElement>(null)
@@ -28,14 +55,7 @@ function App() {
       await csToolsInit()
       dicomImageLoaderInit({ maxWebWorkers: 1 })
 
-      // Get Cornerstone imageIds and fetch metadata into RAM
-      const imageIds = await createImageIdsAndCacheMetaData({
-        StudyInstanceUID:
-          "1.3.6.1.4.1.14519.5.2.1.7009.2403.334240657131972136850343327463",
-        SeriesInstanceUID:
-          "1.3.6.1.4.1.14519.5.2.1.7009.2403.226151125820845824875394858561",
-        wadoRsRoot: "https://d3t6nz73ql33tx.cloudfront.net/dicomweb",
-      })
+      const imageIds = await genTCIAImageIds();
 
       // Instantiate a rendering engine
       const renderingEngineId = "myRenderingEngine"
