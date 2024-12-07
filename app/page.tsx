@@ -67,7 +67,7 @@ function App() {
         type: Enums.ViewportType.ORTHOGRAPHIC,
         element: elementRef.current,
         defaultOptions: {
-          orientation: Enums.OrientationAxis.SAGITTAL,
+          orientation: Enums.OrientationAxis.AXIAL,
         },
       }
 
